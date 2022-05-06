@@ -1,0 +1,24 @@
+{
+  "name": "cls",
+  "version": "1.0.0",
+  "description": "Crud_api",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "shriniwash",
+  "license": "ISC",
+  "dependencies": {
+    "alert": "^5.0.10",
+    "bcrypt": "^5.0.1",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.20.0",
+    "express": "^4.17.3",
+    "express-session": "^1.17.2",
+    "hbs": "^4.2.0",
+    "mongoose": "^6.3.0",
+    "passport": "^0.5.2",
+    "passport-local": "^1.0.0",
+    "popups": "^1.1.3"
+  }
+}
