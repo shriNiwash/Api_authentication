@@ -1,0 +1,7 @@
+swagger: "2.0"
+info:
+  tittle: Book Inventory documentation
+  description: sherpa-tech
+  version: 1.0
+  contact:
+    email: shriniwash@sherpa-tech.com

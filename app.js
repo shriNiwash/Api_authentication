@@ -11,6 +11,11 @@ var alert = require('alert');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const session = require('express-session');
+const logger = require('./Router/logger');
+const swaggerUI  = require('swagger-ui-express');
+const YAML = require('yamljs');
+const swaggerjsDocs = YAML.load('./app.js');
+
 
 
 app.use(bodyparser.json());
@@ -19,6 +24,9 @@ app.use(express.urlencoded({extended:false}));
 const staticPath = path.join('__dirname',"../public");
 console.log(staticPath);
 app.use(express.static(staticPath));
+
+app.use('/api-docs',swaggerUI.serve,swaggerUI.setup(swaggerjsDocs));
+
 
 
 app.use(session({
@@ -38,6 +46,7 @@ app.set('views','./views');
 //Insertion of Data(CREATE OPERATION)
 app.get('/insert',isAuthenticate,(req,res)=>{
     res.render('Insert');
+    logger.info("The insertion page is visited");
 });
 
 app.get('/',(req,res)=>{
@@ -46,6 +55,7 @@ app.get('/',(req,res)=>{
 
 app.get('/login',(req,res)=>{
     res.render('login');
+    logger.info("The user is on login page");
 })
 
 
@@ -86,7 +96,7 @@ app.get("/list/edit/:id",isAuthenticate,async(req,res)=>{
     const id = req.params.id;
     BookModel.findById(id, function (err, docs) {
         if (err){
-            console.log(err);
+            logger.info(err);
         }
         else{
             console.log(docs);
@@ -105,6 +115,7 @@ app.post("/list/edit/:id",async(req,res)=>{
     const result = await BookModel.findByIdAndUpdate(req.params.id,req.body);
     console.log(result);
     console.log(req.body);
+    logger.info("List group is requested for update");
     res.redirect('/list');
     }
     catch(err){
@@ -124,13 +135,12 @@ app.get("/list/delete/:id",isAuthenticate,(req,res)=>{
 passport.use(new LocalStrategy(
     function(username, password, done) {
       userModel.findOne({ username: username }, function (err, user) {
-         var passwords = user.password;
-         console.log(password);
-         console.log(passwords);
-        if (err) { return done(err); }
+        if (err) { return done(err) }
         if (!user) { return done(null, false,{message:"Incorrect Username."}); }
+        var passwords = user.password;
         if (passwords!=password) { return done(null, false,{message:"Incorrect Password."}); }
-        console.log(user);
+        if(!user || passwords!=password) {return done(null,false,{message:"The userid and passsword is incorrect"})}
+        logger.info(user);
         return done(null, user);
       });
     }
@@ -156,15 +166,17 @@ passport.deserializeUser((id,done)=>{
 
 app.get('/logout',(req,res)=>{
     res.redirect('/login');
+    logger.info("The user is logged out");
 });
 
 function isAuthenticate(req,res,done){
-    console.log(req.user);
+    logger.info(req.user);
     if(req.user){
         return done();
     }
     else{
         res.redirect('/login');
+        logger.info("Invalid user");
     }
 }
 
@@ -179,12 +191,12 @@ function isAuthenticate(req,res,done){
 app.post("/list/delete/:id",async(req,res)=>{
     try{
         const resut = await BookModel.findByIdAndDelete(req.params.id);
-        console.log(resut);
-        console.log("deleted");
+        logger.info(resut);
+        logger.info("deleted");
         res.redirect('/list');
     }
     catch(error){
-        console.log(error);
+        logger.info(error);
     }
 
 });
@@ -220,7 +232,8 @@ app.post('/login',
   });
 
 const crudRouter = require('./Router/crud_router');
+const { redirect } = require('express/lib/response');
 app.use(crudRouter);
 
 //The application is running on the port 3000
-app.listen(PORT,()=>console.log(`The Application is running on the port ${PORT}`));
+app.listen(PORT,()=>logger.info(`The Server is ruuning on the port ${PORT}`));

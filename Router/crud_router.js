@@ -5,30 +5,37 @@ require('../model/db');
 const {BookModel,userModel} = require('../model/schema');
 const async = require('hbs/lib/async');
 const { default: mongoose } = require('mongoose');
+const swaggerUI  = require('swagger-ui-express');
+const YAML = require('yamljs');
+const swaggerjsDocs = YAML.load('../api.yaml');
+
 
 mongoose.Promise = global.Promise;
 
 router.use(bodyparser.json());
 router.use(express.urlencoded({extended:false}));
 
-//Creating the Post Request API(CREATE OPERATION)
-// router.post('/books',async(req,res)=>{
-//     const InsertData = new BookModel({
-//         id : req.body.id,
-//         name : req.body.name,
-//         sold : req.body.sold,
-//    });
-//    try{
-//       const data = await InsertData.save();
-//       res.json(data);
-//       console.log(data);
-//       res.status(200);
+app.use('/api-docs',swaggerUI.serve,swaggerUI.setup(swaggerjsDocs));
 
-//    }
-//    catch(err){
-//        res.json({message:"The field is existed"});
-//    }
-// });
+
+//Creating the Post Request API(CREATE OPERATION)
+router.post('/books',async(req,res)=>{
+    const InsertData = new BookModel({
+        id : req.body.id,
+        name : req.body.name,
+        sold : req.body.sold,
+   });
+   try{
+      const data = await InsertData.save();
+      res.json(data);
+      console.log(data);
+      res.status(200);
+
+   }
+   catch(err){
+       res.json({message:"The field is existed"});
+   }
+});
 router.post('/user',(req,res)=>{
     insertUser = new userModel({
         username:req.body.username,
