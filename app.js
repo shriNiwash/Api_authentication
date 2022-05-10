@@ -12,9 +12,6 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const session = require('express-session');
 const logger = require('./Router/logger');
-const swaggerUI  = require('swagger-ui-express');
-const YAML = require('yamljs');
-const swaggerjsDocs = YAML.load('./app.js');
 
 
 
@@ -25,7 +22,6 @@ const staticPath = path.join('__dirname',"../public");
 console.log(staticPath);
 app.use(express.static(staticPath));
 
-app.use('/api-docs',swaggerUI.serve,swaggerUI.setup(swaggerjsDocs));
 
 
 

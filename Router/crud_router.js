@@ -1,5 +1,4 @@
 const express = require('express');
-const router = express.Router();
 const bodyparser = require('body-parser');
 require('../model/db');
 const {BookModel,userModel} = require('../model/schema');
@@ -7,7 +6,8 @@ const async = require('hbs/lib/async');
 const { default: mongoose } = require('mongoose');
 const swaggerUI  = require('swagger-ui-express');
 const YAML = require('yamljs');
-const swaggerjsDocs = YAML.load('../api.yaml');
+const swaggerjsDocs = YAML.load('./api.yaml');
+const router = express.Router();
 
 
 mongoose.Promise = global.Promise;
@@ -15,7 +15,7 @@ mongoose.Promise = global.Promise;
 router.use(bodyparser.json());
 router.use(express.urlencoded({extended:false}));
 
-app.use('/api-docs',swaggerUI.serve,swaggerUI.setup(swaggerjsDocs));
+router.use("/api-docs",swaggerUI.serve,swaggerUI.setup(swaggerjsDocs));
 
 
 //Creating the Post Request API(CREATE OPERATION)
