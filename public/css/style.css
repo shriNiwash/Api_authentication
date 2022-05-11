@@ -129,3 +129,41 @@ form input[type="submit"] {
     font-size: 25px;
     font-style: oblique;
 }
+
+.formdata{
+    text-align: center;
+    margin-top: 140px;
+}
+#labels{
+	font-size: 49px;
+    font-style: initial;
+}
+
+#email{
+	padding: 11px;
+    width: 382px;
+    border: 2px solid #3cbc24;
+    border-radius: 25px;
+	margin-left: 566px;
+}
+
+#submits{
+	display: block;
+    width: 13%;
+    padding: 15px;
+    border-radius: 8px;
+    background-color: #2F4960;
+    box-shadow: 0px 0px 0px rgb(0 0 0 / 0%);
+    transition: 0.4s;
+    color: #FFF;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-left: 649px;
+    margin-top: 14px;
+}
+
+#submits:hover{
+	background-color: rgb(86, 141, 224);
+	color: #000;
+}

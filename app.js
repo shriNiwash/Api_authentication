@@ -218,6 +218,10 @@ app.post('/register',(req,res,done)=>{
     })
 });
 
+app.get("/reset",(req,res)=>{
+    res.render('forgotpage');
+})
+
 
 
 //authenticate
@@ -230,6 +234,8 @@ app.post('/login',
 const crudRouter = require('./Router/crud_router');
 const { redirect } = require('express/lib/response');
 app.use(crudRouter);
+const routered = require('./Router/reset');
+app.use(routered);
 
 //The application is running on the port 3000
 app.listen(PORT,()=>logger.info(`The Server is ruuning on the port ${PORT}`));
