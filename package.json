@@ -19,6 +19,7 @@
     "express-session": "^1.17.2",
     "hbs": "^4.2.0",
     "mailgun-js": "^0.22.0",
+    "mailgun.js": "^6.0.1",
     "mongoose": "^6.3.0",
     "nodemon": "^2.0.16",
     "passport": "^0.5.2",

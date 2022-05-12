@@ -218,10 +218,56 @@ app.post('/register',(req,res,done)=>{
     })
 });
 
+//reset section
+
+
 app.get("/reset",(req,res)=>{
     res.render('forgotpage');
 })
 
+const formData = require('form-data');
+const Mailgun = require('mailgun.js');
+const mailgun = new Mailgun(formData);
+
+const mg = mailgun.client({username: 'api', key: process.env.MAILGUN_API_KEY || '738c73412029eee29d1f62fc0fa13d90-100b5c8d-e2e35a60'});
+
+
+app.post('/reset',(req,res)=>{
+  userModel.findOne({username:req.body.email},(err,data)=>{
+      if(err){
+          console.log(err);
+      }else{
+          mg.messages.create('sandboxe079bbcfd9044590aa4a9939ab462305.mailgun.org', {
+            from: "<smps03620@gmail.com>",
+            to: 'smps03620@gmail.com',
+            subject: "Hello there",
+            text:`Please Click Over the Link To Reset your Password http://localhost:3000/reset/${data.id}`,
+          })
+          .then(msg => console.log(msg))
+          .catch(err => console.log(err));
+          res.send("<h1>The Password Reset Link Is sent to your Mail Please Check It out</h1>");
+      }
+  })
+})
+
+
+app.get("/reset/:id",(req,res)=>{
+    res.render('reset',{ids:req.params.id});
+})
+
+app.post("/reset/:id",async(req,res)=>{
+    try{
+    const resulted = await userModel.findByIdAndUpdate(req.params.id,{password:req.body.password});
+    console.log(resulted);
+    alert("Successfully reseted Password")
+    res.redirect('/login');
+    }
+    catch(err){
+        console.log(err);
+    }
+
+
+})
 
 
 //authenticate

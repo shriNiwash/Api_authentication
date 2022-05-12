@@ -167,3 +167,16 @@ form input[type="submit"] {
 	background-color: rgb(86, 141, 224);
 	color: #000;
 }
+
+.reset{
+    width: 505px;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+}
+
+#passwords{
+    margin-left: 375px;
+    margin-top: 14px;
+
+}
