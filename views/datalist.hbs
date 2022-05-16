@@ -45,6 +45,7 @@
                     <th scope="col">Id</th>
                     <th scope="col">Name</th>
                     <th scope="col">Sold</th>
+                    <th scope="col">image</th>
                 </tr>
             </thead>
             <tbody>
@@ -53,6 +54,9 @@
                     <td>{{_id}}</td>
                     <td>{{name}}</td>
                     <td>{{sold}}</td>
+                    <td>
+                      <img src="/images/{{image}}" alt="profile pic"  width="80"/>
+                    </td>
                     <td>
                         <a class="list-group-item" href="/list/edit/{{_id}}"><i
                                 class="fa fa-pencil-square-o" style="font-size:30px;width:0px"></i></i></a>

@@ -15,6 +15,9 @@ const bookSchema = mongoose.Schema({
     sold : {
         type: Number
 
+    },
+    image:{
+        type:String,
     }
 });
 

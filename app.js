@@ -12,13 +12,14 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const session = require('express-session');
 const logger = require('./Router/logger');
+const multer = require('multer');
 
 
 
 app.use(bodyparser.json());
 app.use(express.urlencoded({extended:false}));
 
-const staticPath = path.join('__dirname',"../public");
+const staticPath = path.join('__dirname',"../public/");
 console.log(staticPath);
 app.use(express.static(staticPath));
 
@@ -54,17 +55,33 @@ app.get('/login',(req,res)=>{
     logger.info("The user is on login page");
 })
 
+//file upload with multer module
+
+var storage = multer.diskStorage({
+    destination:function(req,file,cb){
+        cb(null,'./public/images');
+    },
+    filename:function(req,file,cb){
+        cb(null,file.originalname);
+    }
+});
+
+var upload = multer({storage:storage});
 
 
-app.post('/insert',async(req,res)=>{
+app.post('/insert',upload.single('blogimage'),async(req,res)=>{
     var name = req.body.name;
     var sold = req.body.sold;
+    var image = req.file.fieldname;
+    console.log(image);
     try{
         const insertDatas = new BookModel({
             name : `${name}`,
             sold : `${sold}`,
+            image: `${req.file.filename}`,
         });
-        await insertDatas.save()
+        const data = await insertDatas.save()
+        console.log(data);
         res.redirect('/list');
     }
     catch(err){
@@ -73,7 +90,6 @@ app.post('/insert',async(req,res)=>{
     
 
 });
-
 
 
 
@@ -106,9 +122,13 @@ app.get("/list/edit/:id",isAuthenticate,async(req,res)=>{
   
 });
 
-app.post("/list/edit/:id",async(req,res)=>{
+app.post("/list/edit/:id",upload.single('blogimage'),async(req,res)=>{
     try{
-    const result = await BookModel.findByIdAndUpdate(req.params.id,req.body);
+    const result = await BookModel.findByIdAndUpdate(req.params.id,{
+        name:req.body.name,
+        sold:req.body.sold,
+        image:req.file.filename
+    });
     console.log(result);
     console.log(req.body);
     logger.info("List group is requested for update");
@@ -161,6 +181,7 @@ passport.deserializeUser((id,done)=>{
 });
 
 app.get('/logout',(req,res)=>{
+    req.logout();
     res.redirect('/login');
     logger.info("The user is logged out");
 });
@@ -280,8 +301,7 @@ app.post('/login',
 const crudRouter = require('./Router/crud_router');
 const { redirect } = require('express/lib/response');
 app.use(crudRouter);
-const routered = require('./Router/reset');
-app.use(routered);
+const { createBrotliCompress } = require('zlib');
 
 //The application is running on the port 3000
 app.listen(PORT,()=>logger.info(`The Server is ruuning on the port ${PORT}`));
